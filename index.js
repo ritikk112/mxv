@@ -3,13 +3,17 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 const cors = require('cors');
 require('dotenv').config();
 const MovieController = require('./controller/MovieController'),
-  UserController = require('./controller/UserController');
+  UserController = require('./controller/UserController'),
+  authenticateToken = require('./middleware/authenticate');
+const userInPathMiddleware = require('./middleware/userInPath.js');
 
   // initialize mongodb
   require('./init/db.js');
 
 
 const app = express();
+app.use(express.json());
+
 const PORT = 3001;  // You can choose any port
 
 // Define the target server and other options
@@ -61,13 +65,23 @@ app.get('/api/entity/search', (req, res) => {
   });
 
   // Update a user
-  app.put('/api/user/:id', (req, res) => {
+  app.put('/api/user/:id', [authenticateToken, userInPathMiddleware], (req, res) => {
     UserController.updateUser(req, res);
   });
 
   // Delete a user
   app.delete('/api/user/:id', (req, res) => {
     UserController.deleteUser(req, res);
+  });
+
+  // Login
+  app.post('/api/user/login', (req, res) => {
+    UserController.login(req, res);
+  });
+
+  // Check if a user is authenticated
+  app.get('/api/session/current', authenticateToken, (req, res) => {
+    res.status(200).json(req.user);
   });
 
 // Start the proxy server
