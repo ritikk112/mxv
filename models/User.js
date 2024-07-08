@@ -80,6 +80,15 @@ const userSchema = new Schema({
       type: String
     }
   }],
+  watching: [{
+    movieId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Movie'
+    },
+    currentlyAt: {
+      type: Date
+    }
+  }],
   subscription: {
     plan: {
       type: String
@@ -126,7 +135,10 @@ const userSchema = new Schema({
         type: Number
       }
     }
-  }]
+  }],
+  token: {
+    type: String
+  }
 });
 
 // Middleware to update updatedAt field on save

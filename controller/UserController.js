@@ -1,27 +1,33 @@
 const _ = require('lodash');
-const axios = require('axios');
-const async = require('async');
-const bcrypt = require('bcrypt');
-const User = require('../models/User');
+  bcrypt = require('bcrypt'),
+  jwt = require('jsonwebtoken'),
+  User = require('../models/User'),
+  filterFields = [
+    'passwordHash',
+    'token'
+  ];
+
 
 module.exports = {
     create: async (req, res) => {
         try {
-          const { username, email, password, profile, preferences } = req.body;
+          const { username, email, password, profile = {}, preferences = {} } = req.body,
       
           // Hash the password before saving
-          const passwordHash = await bcrypt.hash(password, 10);
+           passwordHash = await bcrypt.hash(password, 10),
       
-          const newUser = new User({
+           newUser = new User({
             username,
             email,
             passwordHash,
             profile,
             preferences
-          });
+          }),
       
-          const savedUser = await newUser.save();
-          res.status(201).json(savedUser);
+           savedUser = await newUser.save(),
+           user = _.omit(savedUser.toObject(), 'passwordHash');
+
+          res.status(201).json(user);
         } catch (error) {
           res.status(400).json({ message: error.message });
         }
@@ -29,7 +35,11 @@ module.exports = {
     getAllUsers: async (req, res) => {
         try {
           const users = await User.find();
-          res.status(200).json(users);
+
+          // Remove the passwordHash field from each user
+          const filteredUsers = users.map(user => _.omit(user.toObject(), filterFields));
+
+          res.status(200).json(filteredUsers);
         } catch (error) {
           res.status(500).json({ message: error.message });
         }
@@ -47,7 +57,7 @@ module.exports = {
     },
     updateUser: async (req, res) => {
         try {
-            const { username, email, password, profile, preferences } = req.body;
+            const { username, email, password, profile, preferences } = {} = req.body;
         
             // Find the user by ID
             const user = await User.findById(req.params.id);
@@ -63,20 +73,52 @@ module.exports = {
             if (preferences) user.preferences = preferences;
         
             const updatedUser = await user.save();
-            res.status(200).json(updatedUser);
+
+            // Remove the passwordHash field from the user
+            filteredUser = _.omit(updatedUser.toObject(), filterFields);
+
+            res.status(200).json(filteredUser);
           } catch (error) {
             res.status(400).json({ message: error.message });
           }
     },
     deleteUser: async (req, res) => {
         try {
-            const user = await User.findById(req.params.id);
+            const user = await User.findByIdAndDelete(req.params.id);
+
             if (!user) {
               return res.status(404).json({ message: 'User not found' });
             }
-        
-            await user.remove();
+
             res.status(200).json({ message: 'User deleted' });
+          } catch (error) {
+            res.status(500).json({ message: error.message });
+          }
+    },
+    login: async (req, res) => {
+        try {
+            const { email, password } = req.body;
+        
+            // Find the user by email
+            const user = await User.findOne({ email });
+            if (!user) {
+              return res.status(404).json({ message: 'User not found' });
+            }
+
+            // Compare the password
+            const match = await bcrypt.compare(password, user.passwordHash);
+            if (!match) {
+              return res.status(401).json({ message: 'Invalid credentials' });
+            }
+
+            // Generate a JWT token
+            const token = jwt.sign({ id: user._id }, process.env.JWT_KEY, { expiresIn: '1d' });
+
+            // Add token to the user object and save in mongodb
+            user.token = token;
+            await user.save();
+
+            res.status(200).json({ token });
           } catch (error) {
             res.status(500).json({ message: error.message });
           }
