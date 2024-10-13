@@ -41,7 +41,7 @@ function Search() {
     // }
     
     return (
-        <div>
+        <div className="search-page">
         <div className="search-bar">
             <form onSubmit={handleSearch}>
             <input

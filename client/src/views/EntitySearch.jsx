@@ -2,6 +2,9 @@ import React from 'react';
 import axios from "axios";
 import EntityCard from "../components/EntityCard";
 import { useState } from "react";
+import Input from '@mui/joy/Input';
+import { Button } from '@mui/joy';
+
 
 const EntitySearch = () => {
     const [searchTerm, setSearchTerm] = useState("");
@@ -25,6 +28,9 @@ const EntitySearch = () => {
         axios.get(`http://localhost:3001/api/entity/search?query=${searchTerm}`)
             .then((response) => {
                 console.log(response.data, searchTerm);
+                if (response.data.length === 0) {
+                    alert("No results found");
+                }
                 setEntityList(response.data);
             })
             .catch((error) => {
@@ -33,25 +39,17 @@ const EntitySearch = () => {
     };
 
     return (
-        <>
-            <div>
-                <input type="text" value={searchTerm} onChange={handleSearchTermChange} />
-                <label>
-                    <input type="radio" value="movie" checked={searchType === "movie"} onChange={handleSearchTypeChange} />
-                    Movie
-                </label>
-                <label>
-                    <input type="radio" value="tv" checked={searchType === "tv"} onChange={handleSearchTypeChange} />
-                    TV Show
-                </label>
-                <button onClick={handleSearch}>Search</button>
+        <div className='search-page'>
+            <div className='search-box'>
+                <Input placeholder="Search for movies" onChange={handleSearchTermChange} />
+                <Button  variant="contained" color="primary" onClick={handleSearch}>Search</Button>
             </div>
             <div className='entity-recommendation-list'>
                 {entityList.map((entity) => (
                     <EntityCard key={entity.id} movie={entity} />
                 ))}
             </div>
-        </>
+        </div>
     );
 };
 
