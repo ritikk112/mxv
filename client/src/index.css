@@ -28,6 +28,10 @@ code {
   font-weight: 600;
   /* make circular sh */
 }
+.header-right button:hover {
+  background-color: #000000d6;
+  color: white;
+}
 
 div::-webkit-scrollbar {
   width: 12px; /* width of the entire scrollbar */
@@ -163,4 +167,19 @@ div::-webkit-scrollbar-thumb {
   animation: slideUp 0.3s ease forwards;
   height: 80%;
   overflow-y: scroll;
+}
+
+/* Auth Page */
+.auth-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Search Page */
+.search-page .search-box{
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

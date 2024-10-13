@@ -8,6 +8,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import Header from './components/Header';
+import Auth from './views/Auth';
 
 const router = createBrowserRouter([
   {
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
     path: "/search",
     element: <EntitySearch />,
   },
+  {
+    path: "/auth",
+    element: <Auth />
+  }
 ]);
 
 function App() {
