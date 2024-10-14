@@ -15,7 +15,7 @@ function Search() {
     
     useEffect(() => {
         axios
-        .get(`http://localhost:3001/api/entity/search?movie=${params.query}`)
+        .get(`${process.env.REACT_APP_BACKEND_URL}api/entity/search?movie=${params.query}`)
         .then((res) => {
             console.log(res.data);
             setMovies(res.data);
@@ -27,7 +27,7 @@ function Search() {
     const handleSearch = (e) => {
         e.preventDefault();
         axios
-        .get(`http://localhost:3001/api/entity/search?movie=${search}`)
+        .get(`${process.env.REACT_APP_BACKEND_URL}api/entity/search?movie=${search}`)
         .then((res) => {
             console.log(res.data);
             setMovies(res.data);
