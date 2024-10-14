@@ -25,7 +25,7 @@ const EntitySearch = () => {
         // Perform search based on searchTerm and searchType
         // You can use axios to make the API request
         // For example:
-        axios.get(`http://localhost:3001/api/entity/search?query=${searchTerm}`)
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}api/entity/search?query=${searchTerm}`)
             .then((response) => {
                 console.log(response.data, searchTerm);
                 if (response.data.length === 0) {

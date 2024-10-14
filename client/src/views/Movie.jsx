@@ -7,7 +7,7 @@ function Movie(props) {
     const [loading, setLoading] = React.useState(true);
     
     useEffect(() => {
-        axios.get(`http://localhost:3001/api/movie/${params.id}`).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}api/movie/${params.id}`).then((res) => {
             console.log(res.data.original_title);
             setMovie(res.data);
             setLoading(false);
