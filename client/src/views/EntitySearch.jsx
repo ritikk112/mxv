@@ -22,7 +22,7 @@ const EntitySearch = () => {
 
     const handleSearch = (e) => {
         e.preventDefault();
-        axios.get(`http://localhost:3001/api/entity/search?query=${searchTerm}`)
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}api/entity/search?query=${searchTerm}`)
             .then((response) => {
                 console.log(response.data, searchTerm);
                 if (response.data.length === 0) {

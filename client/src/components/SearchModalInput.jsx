@@ -10,7 +10,7 @@ export default function FreeSolo() {
     const [movies, setMovies] = React.useState([]);
     const [loading, setLoading] = React.useState(true);
     React.useEffect(() => {
-        axios.get('http://localhost:3001').then((response) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}`).then((response) => {
             setMovies(response.data);
             setLoading(false);
             console.log(response.data);
