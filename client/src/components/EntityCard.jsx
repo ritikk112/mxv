@@ -21,7 +21,7 @@ function EntityCard({ movie }) {
             }}
             className="entity-card-outer"
         >
-                <h1 className="entity-card-title">{movie.original_title}</h1>
+                <h1 className="entity-card-title">{movie.title || movie.name || movie.original_title || movie.original_name}</h1>
                 {isHovered && (
                     <div className="entity-card-body">
                         <p>{movie.overview}</p>

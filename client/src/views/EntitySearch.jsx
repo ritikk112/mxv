@@ -22,9 +22,6 @@ const EntitySearch = () => {
 
     const handleSearch = (e) => {
         e.preventDefault();
-        // Perform search based on searchTerm and searchType
-        // You can use axios to make the API request
-        // For example:
         axios.get(`http://localhost:3001/api/entity/search?query=${searchTerm}`)
             .then((response) => {
                 console.log(response.data, searchTerm);
@@ -41,7 +38,7 @@ const EntitySearch = () => {
     return (
         <div className='search-page'>
             <div className='search-box'>
-                <Input placeholder="Search for movies" onChange={handleSearchTermChange} />
+                <Input placeholder="Search for movies or tv shows" onChange={handleSearchTermChange} />
                 <Button  variant="contained" color="primary" onClick={handleSearch}>Search</Button>
             </div>
             <div className='entity-recommendation-list'>

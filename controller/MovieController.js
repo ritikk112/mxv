@@ -48,7 +48,7 @@ module.exports = {
         };
 
         async.auto({
-            search: (callback) => {
+            searchMovie: (callback) => {
                 axios.request(config)
                 .then((response) => {
                     const movieList = response.data.results;
@@ -58,10 +58,27 @@ module.exports = {
                 console.log(error);
                 });
             },
-            movieDetails: ['search', (results, callback) => {
-                const movieList = results.search;
+            searchTv: (callback) => {
+                let config = {
+                    method: 'get',
+                    url: `${process.env.TMDB_API_BASE_URL}/3/search/tv?page=${req.query.page || 1}&query=${req.query.query}&api_key=${process.env.TMDB_API_KEY}`,
+                    headers: { }
+                };
+                axios.request(config)
+                .then((response) => {
+                    const movieList = response.data.results;
+                    callback(null, movieList);
+                })
+                .catch((error) => {
+                console.log(error);
+                });
+            },
+            movieDetails: ['searchMovie','searchTv', (results, callback) => {
+                const movieList = results.searchMovie,
+                 tvList = results.searchTv,
+                 entityList = _.orderBy([...movieList, ...tvList], ['vote_count'], ['desc']);
 
-                callback(null, movieList);
+                callback(null, entityList);
             }]
         }, (err, results) => {
             if (err) {
