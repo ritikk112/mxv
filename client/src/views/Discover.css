@@ -1,0 +1,59 @@
+/* Discover Page Container */
+.discover-container {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  /* Error Message */
+  .error-message {
+    color: red;
+  }
+  
+  /* Genres List */
+  .genres-list {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  
+  /* Genre Button */
+  .genres-list .genre-button {
+    border-radius: 8px !important; /* Ensure border-radius is applied */
+    padding: 10px 15px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    background-color: transparent;
+    color: #ab4e4e;
+    border: 2px solid transparent;
+  }
+  
+  .genres-list .genre-button:hover {
+    background-color: rgba(0, 123, 255, 0.2);
+  }
+  
+  .genres-list .genre-button.selected {
+    background-color: black !important; /* Forcefully apply the background */
+    color: white !important; /* Ensure text color is applied */
+    border: 2px solid transparent !important;
+  }
+  
+  /* Movies Container */
+  .movies-container {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+  }
+  
+  /* Observer Div */
+  .observer-div {
+    height: 50px;
+  }
+  
+  /* Loading Message */
+  .loading-message {
+    font-style: italic;
+    color: #555;
+  }
+  

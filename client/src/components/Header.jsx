@@ -7,12 +7,14 @@ const Header = () => {
         <>
             <div className="header">
                 <div className="header-left">
-                  <img style={{
+                    <a href='/'>
+                    <img style={{
                         width: '65px',
                         height: '50px',
                         objectFit: 'contain',
                         cursor: 'pointer'
-                  }} src={logo} alt="mxv" />
+                        }} src={logo} alt="mxv" />
+                    </a>
                   May The Flix Be With You
                 </div>
                 <div className="header-right">
@@ -22,6 +24,9 @@ const Header = () => {
                     <Button className='' variant="contained" color="primary"
                         onClick={() => window.location.href = "/search"}
                     >Search</Button>
+                    <Button variant="contained" color="primary"
+                        onClick={() => window.location.href = "/discover"}
+                    >Discover</Button>
                     <Button variant="contained" color="primary"
                         onClick={() => window.location.href = "/auth"}
                     >Login/Signup</Button>

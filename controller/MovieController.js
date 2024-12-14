@@ -5,6 +5,7 @@ const async = require('async');
 // Express Controller for Movie related things
 module.exports = {
     recommend: async (req, res) => {
+        console.log("Inside recommended")
         let config = {
             method: 'get',
             maxBodyLength: Infinity,

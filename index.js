@@ -6,6 +6,7 @@ const MovieController = require('./controller/MovieController'),
   UserController = require('./controller/UserController'),
   authenticateToken = require('./middleware/authenticate');
 const userInPathMiddleware = require('./middleware/userInPath.js');
+const DiscoverController = require('./controller/DiscoverController.js');
 
   // initialize mongodb
   require('./init/db.js');
@@ -35,6 +36,21 @@ app.use('/vapi', apiProxy);
 // get all movies
 app.get('/api/movie/recommend', (req, res) => {
     MovieController.recommend(req, res);
+});
+
+// get genres list
+app.get('/api/genres', (req, res) => {
+  DiscoverController.getGenres(req, res);
+});
+
+// get movie list of specific genres
+app.get('/api/genres/:id', (req, res) => {
+  DiscoverController.discoverMovies(req, res);
+});
+
+// get movie recommendations based on id
+app.get('/api/movie/:movieId/recommendations', (req, res) => {
+  DiscoverController.getRecommendations(req, res);
 });
 
 // get movie by id

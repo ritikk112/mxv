@@ -2,6 +2,7 @@ import HomePage from './views/HomePage';
 import ErrorPage from "./views/Error";
 import Movie from "./views/Movie";
 import EntitySearch from "./views/EntitySearch";
+import Discover from './views/Discover';
 // import MoviePage from './views/MoviePage';
 import {
   createBrowserRouter,
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
   {
     path: "/auth",
     element: <Auth />
+  },
+  {
+    path: "/discover",
+    element: <Discover />
   }
 ]);
 
