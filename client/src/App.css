@@ -79,13 +79,14 @@
 
   .movie-container > div:first-child,
   .movie-container > div:last-child {
-    width: 90%; /* Both sections take full width */
+    width: 80%; /* Both sections take full width */
   }
 
   .movie-container > div:last-child {
     height: 50vh; /* Maintain scrollable height for stacked view */
-    margin-top: 20px; /* Add spacing between stacked sections */
     padding-top: 20px;
+    margin-bottom: 5vh;
+    margin-left: 2vh
   }
 }
 
