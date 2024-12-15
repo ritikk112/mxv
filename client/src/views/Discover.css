@@ -2,6 +2,8 @@
 .discover-container {
     padding: 20px;
     text-align: center;
+    flex-direction: column;
+    display: flex;
   }
   
   /* Error Message */
@@ -39,21 +41,51 @@
   
   /* Movies Container */
   .movies-container {
-    margin-top: 20px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    justify-content: center;
+    display: flex; /* Use flexbox for layout */
+    flex-wrap: wrap; /* Allow items to wrap to the next line */
+    gap: 16px; /* Add space between items */
+    justify-content: center; /* Center items horizontally */
+    padding: 16px;
   }
+  
   
   /* Observer Div */
   .observer-div {
-    height: 50px;
+    width: 100%;
+    height: 1px; /* Small height for observer */
   }
+  
+  .genre-button {
+    white-space: nowrap; /* Prevent button text from wrapping */
+  }
+  
   
   /* Loading Message */
   .loading-message {
     font-style: italic;
     color: #555;
   }
+  .entity-card {
+        display: flex;
+        flex-direction: column;
+        flex: 0 1 calc(33.333% - 16px); /* 3 cards per row with 16px gap */
+        max-width: calc(33.333% - 16px); /* Ensures wrapping on smaller screens */
+        box-sizing: border-box;
+    }
+
+    @media (max-width: 768px) {
+        .entity-card {
+            flex: 0 1 calc(50% - 8px); /* 2 cards per row on smaller screens */
+            max-width: calc(50% - 8px);
+        }
+    }
+
+    @media (max-width: 480px) {
+        .entity-card {
+            flex: 0 1 100%; /* Full width on very small screens */
+            max-width: 100%;
+        }
+    }
+
+
   

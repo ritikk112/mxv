@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
+import '../App.css'
 function Movie(props) {
     const params = useParams();
     const [movie, setMovie] = React.useState(null);
@@ -8,7 +9,7 @@ function Movie(props) {
     const [loading, setLoading] = React.useState(true);
     
     useEffect(() => {
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}api/movie/${params.id}`).then((res) => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/movie/${params.id}`).then((res) => {
             console.log(res.data.original_title);
             setMovie(res.data);
             setLoading(false);
@@ -18,7 +19,7 @@ function Movie(props) {
 
     useEffect(() => {
         axios
-            .get(`${process.env.REACT_APP_BACKEND_URL}api/movie/${params.id}/recommendations`)
+            .get(`${process.env.REACT_APP_BACKEND_URL}/api/movie/${params.id}/recommendations`)
             .then((res) => {
                 console.log("Recommendations:", res.data);
                 setRecommendations(res.data);
@@ -31,8 +32,8 @@ function Movie(props) {
     }
 
     return (
-        <div style={{ display: "flex", flexDirection: "row", width: "100%", padding: "1vh" }}>
-            <div style={{ width: "70%" }}>
+        <div className="movie-container">
+            <div>
                 <div className="movie-page-outer">
                     <div className="movie-page" style=
                         {{
@@ -65,46 +66,31 @@ function Movie(props) {
                     </div>
                 </div>
             </div>
-            <div style={{
-                width: "20%",
-                display: "flex",
-                flexDirection: "column",
-                backgroundColor: "rgba(255, 255, 255, 0.2)",
-                backdropFilter: "blur(10px)",
-                WebkitBackdropFilter: "blur(10px)",
-                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
-                borderLeft: "1px solid #ddd",
-                height: "50vh",
-                position: "fixed",
-                right: "2vh",
-                top: "30vh",
-                overflowY: "auto",
-                padding: "20px",
-            }}>
+            <div>
 
                 <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
                     {recommendations.map((rec) => (
-                        <li key={rec.id} style={{ marginBottom: "10px" }}>
-                            <div style={{
+                        <li key={rec.id} style={{
+                                marginBottom: "10px",
                                 display: "flex",
                                 alignItems: "center",
                                 cursor: "pointer",
                                 padding: "10px",
                                 borderRadius: "5px",
                                 backgroundColor: "transparent",
-                                boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)"
+                                boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
                             }}
-                                onClick={() => window.location.href = `${rec.id}`}>
+                            onClick={() => (window.location.href = `${rec.id}`)}
+                        >
                                 <img
                                     src={`https://image.tmdb.org/t/p/w92${rec.poster_path}`}
                                     alt={rec.original_title}
                                     style={{ marginRight: "10px", borderRadius: "5px" }}
                                 />
                                 <div>
-                                    <h4 style={{ margin: 0 }}>{rec.original_title}</h4>
+                                    <h5 style={{ margin: 0 }}>{rec.original_title}</h5>
                                     <p style={{ margin: 0, fontSize: "0.9em", color: "#111" }}>{rec.release_date}</p>
                                 </div>
-                            </div>
                         </li>
                     ))}
                 </ul>

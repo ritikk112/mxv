@@ -4,7 +4,8 @@ import EntityCard from '../components/EntityCard';
 
 const HomePage = () => {
   const backend = process.env.REACT_APP_BACKEND_URL;
-  const baseURL = `${backend}api/movie/recommend`;
+  const baseURL = `${backend}/api/movie/recommend`;
+  console.log(baseURL)
   const [movies, setMovies] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
   React.useEffect(() => {

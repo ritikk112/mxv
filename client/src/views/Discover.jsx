@@ -37,8 +37,8 @@ const Discover = () => {
   const fetchGenres = async () => {
     try {
       console.log('Fetching genres...');
-      console.log(`${process.env.REACT_APP_BACKEND_URL}api/genres`);
-      const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}api/genres`);
+      console.log(`${process.env.REACT_APP_BACKEND_URL}/api/genres`);
+      const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/genres`);
       console.log('Genres fetched:', response.data);
       setGenres(response.data);
     } catch (err) {
@@ -53,7 +53,7 @@ const Discover = () => {
     try {
       console.log(`Fetching movies for genre ${id}, page ${page}`);
       const response = await axios.get(
-        `${process.env.REACT_APP_BACKEND_URL}api/genres/${id}?page=${page}`
+        `${process.env.REACT_APP_BACKEND_URL}/api/genres/${id}?page=${page}`
       );
       console.log('Movies fetched:', response.data);
       setMovies((prevMovies) => [...prevMovies, ...response.data]);

@@ -36,3 +36,56 @@
     transform: rotate(360deg);
   }
 }
+.movie-container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  padding: 1vh;
+  flex-wrap: wrap; /* Enable wrapping for responsiveness */
+  justify-content: space-between; /* Ensures space between sections */
+  align-items: center; /* Aligns child elements (movie and recommendations) vertically */
+  gap: 20px; /* Adds consistent space between movie and recommendations div */
+}
+
+.movie-container > div:first-child {
+  width: 70%;
+  min-width: 300px; /* Prevents shrinking too much */
+}
+
+.movie-container > div:last-child {
+  width: 20%;
+  margin-right: 4vh;
+  min-width: 300px; /* Prevents shrinking too much */
+  height: 50vh; /* Aligns height with movie player */
+  display: flex;
+  flex-direction: column; /* Ensures list items stack properly */
+  justify-content: flex-start; /* Center content vertically within the div */
+  background-color: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  border-left: 1px solid #ddd;
+  padding: 20px 20px 20px;
+  padding-top: 25px;
+  overflow-y: auto; /* Enable vertical scrolling */
+}
+
+/* Responsive behavior: Stack sections when space is insufficient */
+@media (max-width: 1024px) {
+  .movie-container {
+    flex-direction: column; /* Stack sections vertically */
+    align-items: center; /* Center content when stacked */
+  }
+
+  .movie-container > div:first-child,
+  .movie-container > div:last-child {
+    width: 90%; /* Both sections take full width */
+  }
+
+  .movie-container > div:last-child {
+    height: 50vh; /* Maintain scrollable height for stacked view */
+    margin-top: 20px; /* Add spacing between stacked sections */
+    padding-top: 20px;
+  }
+}
+
