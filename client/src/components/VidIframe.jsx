@@ -10,7 +10,7 @@ const VidIframe = (props) => {
             props.type === 'tv' ? `&season=${props.season || 1}&episode=${props.episode || 1}` : ''
         }`;
 
-        const proxyUrl = `http://localhost:3001/video/proxy?url=${encodeURIComponent(videoUrl)}`;
+        const proxyUrl = `${process.env.REACT_APP_BACKEND_URL}/video/proxy?url=${encodeURIComponent(videoUrl)}`;
 
         const checkProxy = async () => {
             try {
