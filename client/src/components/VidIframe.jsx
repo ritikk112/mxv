@@ -3,7 +3,8 @@ import axios from 'axios';
 
 const VidIframe = (props) => {
     const [iframeSrc, setIframeSrc] = useState('');
-    const [error, setError] = useState(null);
+    const [error, setError] = useState(false);
+    const [isFallback, setIsFallback] = useState(false);
 
     useEffect(() => {
         const videoUrl = `https://vidsrc.me/embed/${props.type}?tmdb=${props.id}${
@@ -12,47 +13,65 @@ const VidIframe = (props) => {
 
         const proxyUrl = `${process.env.REACT_APP_BACKEND_URL}/video/proxy?url=${encodeURIComponent(videoUrl)}`;
 
-        const checkProxy = async () => {
+        const fetchProxyContent = async () => {
             try {
-                // Use a GET request to validate proxy
-                const response = await axios.get(proxyUrl);
+                // Verify if the proxy is working
+                const response = await axios.head(proxyUrl);
                 if (response.status >= 200 && response.status < 300) {
-                    setIframeSrc(proxyUrl);
+                    setIframeSrc(proxyUrl); // Use the proxy if successful
                 } else {
-                    throw new Error(`Error: ${response.status}`);
+                    throw new Error('Proxy failed');
                 }
             } catch (err) {
-                console.error('Error loading video:', err.message);
-                setError('Failed to load video. Please try again later.');
+                console.warn('Proxy failed. Falling back to original URL:', err.message);
+                setIsFallback(true);
+                setIframeSrc(videoUrl); // Fallback to original URL
+                setError(true);
             }
         };
 
-        checkProxy();
+        fetchProxyContent();
     }, [props.type, props.id, props.season, props.episode]);
 
-    if (error) {
-        return (
-            <div className="error-container" style={{ textAlign: 'center', color: 'red' }}>
-                <h3>{error}</h3>
-            </div>
-        );
-    }
-
     return iframeSrc ? (
+        isFallback ? (
         <iframe
             title="Movie"
             src={iframeSrc}
-            allow="autoplay; fullscreen"
-            allowFullScreen
-            sandbox="allow-scripts allow-same-origin"
             style={{
-                border: 'none',
                 width: '100%',
-                height: 'fit-content',
+                height: '500px',
+                border: 'none',
+                borderRadius: '10px',
+                boxShadow: '0px 10px 30px rgba(0, 0, 0, 0.5)',
+                backgroundColor: '#000',
             }}
-        />
+            frameBorder="0"
+            referrerPolicy="origin"
+            allowFullScreen
+        />) :
+        (<iframe
+            title="Movie"
+            src={iframeSrc}
+            style={{
+                width: '100%',
+                height: '500px',
+                border: 'none',
+                borderRadius: '10px',
+                boxShadow: '0px 10px 30px rgba(0, 0, 0, 0.5)',
+                backgroundColor: '#000',
+            }}
+            frameBorder="0"
+            referrerPolicy="origin"
+            sandbox="allow-scripts allow-same-origin" // Remove sandbox only on fallback
+            allowFullScreen
+        />)
     ) : (
-        <div>Loading...</div>
+        <div style={{ textAlign: 'center', padding: '20px' }}>
+            <h3 style={{ color: 'red' }}>
+                {error ? 'Failed to load proxy. Falling back to the original video.' : 'Loading video...'}
+            </h3>
+        </div>
     );
 };
 
