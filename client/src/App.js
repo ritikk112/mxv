@@ -11,34 +11,46 @@ import {
 import Header from './components/Header';
 import Auth from './views/Auth';
 
+export const Layout = ({ children }) => {
+  return (
+    <>
+      <Header />
+      {children}
+    </>
+  );
+};
+
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <HomePage />,
+    element: <Layout><HomePage /></Layout>,
     errorElement: <ErrorPage />
   },
   {
     path: "/stream/movie/:id",
-    element: <Movie />,
+    element: <Layout><Movie /></Layout>,
+  },
+  {
+    path: "/stream/tv/:id",
+    element: <Layout><Movie /></Layout>,
   },
   {
     path: "/search",
-    element: <EntitySearch />,
+    element: <Layout><EntitySearch /></Layout>,
   },
   {
     path: "/auth",
-    element: <Auth />
+    element: <Layout><Auth /></Layout>
   },
   {
     path: "/discover",
-    element: <Discover />
+    element: <Layout><Discover /></Layout>
   }
 ]);
 
 function App() {
   return (
     <>
-      <Header />
       <RouterProvider router={router} />
     </>
   );

@@ -36,7 +36,7 @@
     transform: rotate(360deg);
   }
 }
-.movie-container {
+.movie-page-outer {
   display: flex;
   flex-direction: row;
   width: 100%;
@@ -47,12 +47,12 @@
   gap: 20px; /* Adds consistent space between movie and recommendations div */
 }
 
-.movie-container > div:first-child {
+.movie-page-outer > div:first-child {
   width: 70%;
   min-width: 300px; /* Prevents shrinking too much */
 }
 
-.movie-container > div:last-child {
+.movie-page-outer > div:last-child {
   width: 20%;
   margin-right: 4vh;
   min-width: 300px; /* Prevents shrinking too much */
@@ -72,17 +72,17 @@
 
 /* Responsive behavior: Stack sections when space is insufficient */
 @media (max-width: 1024px) {
-  .movie-container {
+  .movie-page-outer {
     flex-direction: column; /* Stack sections vertically */
     align-items: center; /* Center content when stacked */
   }
 
-  .movie-container > div:first-child,
-  .movie-container > div:last-child {
+  .movie-page-outer > div:first-child,
+  .movie-page-outer > div:last-child {
     width: 80%; /* Both sections take full width */
   }
 
-  .movie-container > div:last-child {
+  .movie-page-outer > div:last-child {
     height: 50vh; /* Maintain scrollable height for stacked view */
     padding-top: 20px;
     margin-bottom: 5vh;

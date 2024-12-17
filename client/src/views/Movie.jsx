@@ -1,21 +1,39 @@
 import axios from "axios";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import '../App.css'
+import VidIframe from "../components/VidIframe";
+import EpisodeList from "../components/EpisodeList";
+
 function Movie(props) {
     const params = useParams();
-    const [movie, setMovie] = React.useState(null);
+    const [entity, setEntity] = useState(null);
+    const [loading, setLoading] = useState(true);
     const [recommendations, setRecommendations] = React.useState([]);
-    const [loading, setLoading] = React.useState(true);
-    
+    const [type, setType] = useState(null);
+
     useEffect(() => {
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/movie/${params.id}`).then((res) => {
-            console.log(res.data.original_title);
-            setMovie(res.data);
-            setLoading(false);
-        });
-        console.log(props, params);
-    }, [params, props])
+        const [parsedType, parsedId] = params.id.split('~');
+        setType(parsedType);
+
+        const fetchEntity = async () => {
+            try {
+                const endpoint =
+                    parsedType === 'tv'
+                        ? `${process.env.REACT_APP_BACKEND_URL}/api/tv/${parsedId}`
+                        : `${process.env.REACT_APP_BACKEND_URL}/api/movie/${parsedId}`;
+
+                const response = await axios.get(endpoint);
+                setEntity(response.data);
+                setLoading(false);
+            } catch (error) {
+                console.error("Error fetching entity:", error);
+                setLoading(false);
+            }
+        };
+
+        fetchEntity();
+    }, [params]);
 
     useEffect(() => {
         axios
@@ -28,47 +46,46 @@ function Movie(props) {
     }, [params.id]);
 
     if (loading) {
-        return <div>loading...</div>;
+        return <div>Loading...</div>;
+    }
+
+    if (!entity) {
+        return <div>Failed to load entity.</div>;
     }
 
     return (
-        <div className="movie-container">
-            <div>
-                <div className="movie-page-outer">
-                    <div className="movie-page" style=
-                        {{
-                            backgroundImage: `url(https://www.themoviedb.org/t/p/w1920_and_h800_multi_faces${movie.backdrop_path})`,
-                            backgroundSize: 'cover',
-                            backgroundPosition: 'center center',
-                            backgroundRepeat: 'no-repeat',
-                            width: '100%',
-                            height: '100vh',
-                            filter: 'blur(5px)',
-                            '-webkit-filter': 'blur(5px)',
-                            position: 'fixed',
-                            top: 0,
-                            left: 0,
-                            zIndex: -1
-                        }} 
-                    />
-                    <div className="movie-title">
-                        <h1>{movie.original_title}</h1>
-                    </div>
-                    <div className="movie-player">
-                        <iframe
-                            title='Movie'
-                            src={`https://vidsrc.in/embed/movie?tmdb=${params.id}`}
-                            allow='autoplay; fullscreen'
-                            allowFullScreen='yes'
-                            frameBorder='no'
-                            style={{width: '80%', height: '80%'}}
-                        />
-                    </div>
-                </div>
+        <div className="movie-page-outer">
+            {/* Background image */}
+            <div
+                className="movie-page"
+                style={{
+                    backgroundImage: `url(https://www.themoviedb.org/t/p/w1920_and_h800_multi_faces${entity.backdrop_path})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center center",
+                    backgroundRepeat: "no-repeat",
+                    width: "100%",
+                    height: "100vh",
+                    filter: "blur(5px)",
+                    position: "fixed",
+                    top: 0,
+                    left: 0,
+                    zIndex: -1,
+                }}
+            />
+            {/* Movie title */}
+            <div className="movie-title">
+                <h1>{entity.original_title || entity.original_name}</h1>
             </div>
-            <div>
-
-                <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+            {/* Video Player */}
+            <div className="movie-player">
+                <VidIframe id={params.id.split('~')[1]} type={type} />
+            {/* {
+                type === 'tv' && (<div className="episode-list">
+                    <EpisodeList id={params.id.split('~')[1]} type={type} />
+                </div>)
+            } */}
+            </div>
+            <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
                     {recommendations.map((rec) => (
                         <li key={rec.id} style={{
                                 marginBottom: "10px",
@@ -94,7 +111,6 @@ function Movie(props) {
                         </li>
                     ))}
                 </ul>
-            </div>
         </div>
     );
 }

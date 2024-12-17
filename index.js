@@ -7,6 +7,7 @@ const MovieController = require('./controller/MovieController'),
   authenticateToken = require('./middleware/authenticate');
 const userInPathMiddleware = require('./middleware/userInPath.js');
 const DiscoverController = require('./controller/DiscoverController.js');
+const PlayerController = require('./controller/PlayerController.js');
 
   // initialize mongodb
   require('./init/db.js');
@@ -33,6 +34,10 @@ app.use(cors());
 // Use the proxy to forward requests starting with /api to the STREAM_API_URL
 app.use('/vapi', apiProxy);
 
+app.get('/video/proxy', async (req, res) => {
+  PlayerController.proxyVideo(req, res);
+});
+
 // get all movies
 app.get('/api/movie/recommend', (req, res) => {
     MovieController.recommend(req, res);
@@ -56,6 +61,10 @@ app.get('/api/movie/:movieId/recommendations', (req, res) => {
 // get movie by id
 app.get('/api/movie/:id', (req, res) => {
     MovieController.getMovie(req, res);
+});
+
+app.get('/api/tv/:id', (req, res) => {
+    MovieController.getTv(req, res);
 });
 
 // search movies

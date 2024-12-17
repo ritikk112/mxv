@@ -1,6 +1,8 @@
 import React from 'react';
 import logo from './logo.png';
 import Button from '@mui/joy/Button';
+import { Link } from "react-router-dom";
+
 
 const Header = () => {
     return (
@@ -18,18 +20,18 @@ const Header = () => {
                   May The Flix Be With You
                 </div>
                 <div className="header-right">
-                    <Button variant="contained" color="primary"
-                        onClick={() => window.location.href = "/"}
-                    >Home</Button>
-                    <Button className='' variant="contained" color="primary"
-                        onClick={() => window.location.href = "/search"}
-                    >Search</Button>
-                    <Button variant="contained" color="primary"
-                        onClick={() => window.location.href = "/discover"}
-                    >Discover</Button>
-                    <Button variant="contained" color="primary"
-                        onClick={() => window.location.href = "/auth"}
-                    >Login/Signup</Button>
+                <Link to="/" style={{ textDecoration: 'none' }}>
+                    <Button variant="contained" color="primary">Home</Button>
+                </Link>
+                <Link to="/search" style={{ textDecoration: 'none' }}>
+                    <Button variant="contained" color="primary">Search</Button>
+                </Link>
+                <Link to="/discover" style={{ textDecoration: 'none' }}>
+                    <Button variant="contained" color="primary">Discover</Button>
+                </Link>
+                <Link to="/auth" style={{ textDecoration: 'none' }}>
+                    <Button variant="contained" color="primary">Login/Signup</Button>
+                </Link>
                 </div>
             </div>
         </>
