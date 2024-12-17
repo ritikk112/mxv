@@ -96,23 +96,120 @@ module.exports = {
         const page = req.query.page || 1; // Default to page 1 if no page is specified
         console.log(`Fetching recommendations for movie ID: ${movieId}, Page: ${page}`);
 
-        let config = {
+        let movieRecommendationReqConfig = {
             method: 'get',
             url: `${process.env.TMDB_API_BASE_URL}/3/movie/${movieId}/recommendations?language=en-US&page=${page}`,
             headers: {
                 accept: 'application/json',
                 Authorization: `Bearer ${process.env.TMDB_API_READ_KEY}` // Ensure you set TMDB_API_READ_KEY in your environment variables
             }
+        },
+        tvRecommendationReqConfig = {
+            method: 'get',
+            url: `${process.env.TMDB_API_BASE_URL}/3/tv/${movieId}/recommendations?language=en-US&page=${page}`,
+            headers: {
+                accept: 'application/json',
+                Authorization: `Bearer ${process.env.TMDB_API_READ_KEY}` // Ensure you set TMDB_API_READ_KEY in your environment variables
+            }
+        },
+        movieSimilarReqConfig = {
+            method: 'get',
+            url: `${process.env.TMDB_API_BASE_URL}/3/movie/${movieId}/similar?language=en-US&page=${page}`,
+            headers: {
+                accept: 'application/json',
+                Authorization: `Bearer ${process.env.TMDB_API_READ_KEY}` // Ensure you set TMDB_API_READ_KEY in your environment variables
+            }
+        },
+        tvSimilarReqConfig = {
+            method: 'get',
+            url: `${process.env.TMDB_API_BASE_URL}/3/tv/${movieId}/similar?language=en-US&page=${page}`,
+            headers: {
+                accept: 'application/json',
+                Authorization: `Bearer ${process.env.TMDB_API_READ_KEY}` // Ensure you set TMDB_API_READ_KEY in your environment variables
+            }
         };
 
-        axios.request(config)
-            .then((response) => {
-                console.log(`Recommendations fetched for movie ID: ${movieId}, Page: ${page}`);
-                res.json(response.data.results); // Send recommendations as a JSON response
-            })
-            .catch((error) => {
-                console.error('Error fetching recommendations:', error.message);
-                res.status(500).json({ error: 'Failed to fetch recommendations' });
-            });
+        async.auto({
+            movieRecommendations: (callback) => {
+                axios.request(movieRecommendationReqConfig)
+                    .then((response) => {
+                        console.log(`Recommendations fetched for movie ID: ${movieId}, Page: ${page}`);
+                        callback(null, response.data.results);
+                    })
+                    .catch((error) => {
+                        console.error('Error fetching movie recommendations:', error.message);
+                        callback();
+                    });
+            },
+            tvRecommendations: (callback) => {
+                axios.request(tvRecommendationReqConfig)
+                    .then((response) => {
+                        console.log(`Recommendations fetched for TV show ID: ${movieId}, Page: ${page}`);
+                        callback(null, response.data.results);
+                    })
+                    .catch((error) => {
+                        console.error('Error fetching TV show recommendations:', error.message);
+                        callback();
+                    });
+            },
+            similarMovie: (callback) => {
+                axios.request(movieSimilarReqConfig)
+                    .then((response) => {
+                        console.log(`Similar movies fetched for movie ID: ${movieId}, Page: ${page}`);
+                        callback(null, response.data.results);
+                    })
+                    .catch((error) => {
+                        console.error('Error fetching similar movies:', error.message);
+                        callback();
+                    });
+            },
+            similarTv: (callback) => {
+                axios.request(tvSimilarReqConfig)
+                    .then((response) => {
+                        console.log(`Similar TV shows fetched for TV show ID: ${movieId}, Page: ${page}`);
+                        callback(null, response.data.results);
+                    })
+                    .catch((error) => {
+                        console.error('Error fetching similar TV shows:', error.message);
+                        callback();
+                    });
+            },
+            recommendations: ['movieRecommendations', 'tvRecommendations', 'similarMovie', 'similarTv', (results, callback) => {
+                const movieList = _.map(results.movieRecommendations, (movie) => {
+                        return {
+                            ...movie,
+                            id: `movie~${movie.id}`,
+                        }
+                    }),
+                    tvList = _.map(results.tvRecommendations, (tv) => {
+                        return {
+                            ...tv,
+                            id: `tv~${tv.id}`,
+                        }
+                    }),
+                    similarMovieList = _.map(results.similarMovie, (movie) => {
+                        return {
+                            ...movie,
+                            id: `movie~${movie.id}`,
+                        }
+                    }),
+                    similarTvList = _.map(results.similarTv, (tv) => {
+                        return {
+                            ...tv,
+                            id: `tv~${tv.id}`,
+                        }
+                    }),
+                    entityList = _.orderBy([...movieList, ...tvList, ...similarMovieList, ...similarTvList], ['vote_count'], ['desc']) || [];
+
+                callback(null, entityList);
+            }]
+        }, (err, results) => {
+            console.log('Recommendations:', results.recommendations);
+            if (results?.recommendations?.length === 0) {
+                console.error(err);
+                return res.status(500).send({ error: 'Failed to fetch recommendations' });
+            }
+            res.json(results.recommendations);
+        });
     }
 };

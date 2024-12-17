@@ -1,92 +1,142 @@
-.App {
+/* General Reset */
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #000;
+  color: #fff;
+  overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+/* Main container */
+.movie-page-outer {
+  position: relative;
+  overflow: hidden;
+  min-height: 100vh;
+}
+
+/* Background Image */
+.movie-page {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  filter: blur(5px) brightness(0.6); /* Blur and darken for readability */
+  z-index: -1;
+}
+
+/* Content Wrapper */
+.movie-content-wrapper {
+  position: relative;
+  z-index: 1;
+  padding: 20px;
+  margin-top: 50px; /* Adjust top margin */
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Movie Title */
+.movie-title h1 {
+  margin: 0;
+  font-size: 3rem;
+  font-weight: bold;
+  text-align: center;
+  text-shadow: 0px 4px 8px rgba(0, 0, 0, 0.7);
+}
+
+/* Video Player */
+.movie-player {
+  margin: 0 auto;
+  max-width: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Episode List */
+.episode-list {
+  margin: 20px auto;
+  max-width: 300px;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* Recommendations Section */
+.recommendations-section {
+  padding: 20px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.recommendations-section h3 {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 20px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.recommendations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  padding: 10px;
 }
 
-.App-link {
-  color: #61dafb;
+/* Entity Card */
+.entity-card {
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Loading & Error States */
+.loading-container,
+.error-container {
+  text-align: center;
+  font-size: 1.5rem;
+  margin-top: 100px;
 }
-.movie-page-outer {
+/* iframe */
+/* Iframe Container */
+.movie-player {
   display: flex;
-  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  padding: 20px 0;
   width: 100%;
-  padding: 1vh;
-  flex-wrap: wrap; /* Enable wrapping for responsiveness */
-  justify-content: space-between; /* Ensures space between sections */
-  align-items: center; /* Aligns child elements (movie and recommendations) vertically */
-  gap: 20px; /* Adds consistent space between movie and recommendations div */
+  max-width: 100vw;
+  z-index: 2; /* Ensure iframe is above other elements */
 }
 
-.movie-page-outer > div:first-child {
-  width: 70%;
-  min-width: 300px; /* Prevents shrinking too much */
+/* Iframe Styling */
+.movie-player iframe {
+  width: 80%; /* Take up 80% of the container width */
+  max-width: 1024px;
+  height: fit-content;
+  border: none; /* Remove border */
+  border-radius: 10px; /* Smooth rounded corners */
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.7); /* Adds depth and shadow */
+  z-index: 2; /* Ensure iframe is above background */
+  background-color: #000; /* Black background for fallback */
 }
 
-.movie-page-outer > div:last-child {
-  width: 20%;
-  margin-right: 4vh;
-  min-width: 300px; /* Prevents shrinking too much */
-  height: 50vh; /* Aligns height with movie player */
+/* Dropdown Styling */
+.episode-list {
+  margin: 20px auto;
   display: flex;
-  flex-direction: column; /* Ensures list items stack properly */
-  justify-content: flex-start; /* Center content vertically within the div */
-  background-color: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  border-left: 1px solid #ddd;
-  padding: 20px 20px 20px;
-  padding-top: 25px;
-  overflow-y: auto; /* Enable vertical scrolling */
+  justify-content: center;
 }
 
-/* Responsive behavior: Stack sections when space is insufficient */
-@media (max-width: 1024px) {
-  .movie-page-outer {
-    flex-direction: column; /* Stack sections vertically */
-    align-items: center; /* Center content when stacked */
-  }
-
-  .movie-page-outer > div:first-child,
-  .movie-page-outer > div:last-child {
-    width: 80%; /* Both sections take full width */
-  }
-
-  .movie-page-outer > div:last-child {
-    height: 50vh; /* Maintain scrollable height for stacked view */
-    padding-top: 20px;
-    margin-bottom: 5vh;
-    margin-left: 2vh
-  }
+/* Recommendations Grid */
+.recommendations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  padding: 20px;
+  margin-top: 20px;
 }
-
